@@ -1,0 +1,154 @@
+table IndigoFlightData
+	lineageTag: 9a85990e-ea61-4a26-b131-889018bf36b7
+
+	measure 'Total Flights' =
+			
+			COUNTROWS(
+			    GROUPBY(
+			        IndigoFlightData,
+			        IndigoFlightData[Date_of_Journey],
+			        IndigoFlightData[Source],
+			        IndigoFlightData[Destination],
+			        IndigoFlightData[Dep_Time]
+			    )
+			)
+		lineageTag: 6e471023-796c-4379-8c0c-3badf8456cf4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Ticket Price' =
+			
+			AVERAGE('IndigoFlightData'[Price])
+		formatString: "₹"\ #,0.00;-"₹"\ #,0.00;"₹"\ #,0.00
+		lineageTag: 364c0e49-5bc1-4b72-8346-ffbff08626d6
+
+		annotation PBI_FormatHint = {"currencyCulture":"ne-IN"}
+
+	measure 'Avg Duration(min)' =
+			
+			AVERAGE(IndigoFlightData[Duration])
+		formatString: 0.00
+		lineageTag: a55f4b13-5878-46ac-97f7-998dd4336818
+
+	measure 'Total Revenue' =
+			
+			SUM('IndigoFlightData'[Price])
+		formatString: "₹"\ #,0.00;-"₹"\ #,0.00;"₹"\ #,0.00
+		lineageTag: 6a7d635b-0f13-4b5d-8f44-0cfc354b460d
+
+		annotation PBI_FormatHint = {"currencyCulture":"ne-IN"}
+
+	measure 'Total Routes' = DISTINCTCOUNT(IndigoFlightData[Route])
+		formatString: 0
+		lineageTag: bf8a0ed9-12e7-42db-a818-0a58407a0ff8
+
+	measure 'Total Bookings' =
+			
+			COUNTROWS('IndigoFlightData')
+		formatString: 0
+		lineageTag: f3801f10-7c5d-4aa2-8f68-1c0ab0401b3d
+
+	column Airline
+		dataType: string
+		lineageTag: 1ed2fd17-fb52-4a29-9fda-79016c22d46a
+		summarizeBy: none
+		sourceColumn: Airline
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date_of_Journey
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: e6115d8e-c96a-41a5-beec-7ce9bb34391a
+		summarizeBy: none
+		sourceColumn: Date_of_Journey
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Source
+		dataType: string
+		lineageTag: b0fbe341-e343-4478-a905-665136b18156
+		dataCategory: City
+		summarizeBy: none
+		sourceColumn: Source
+
+		annotation SummarizationSetBy = Automatic
+
+	column Destination
+		dataType: string
+		lineageTag: 3261dca1-0bec-4256-b9c5-5091b452b3ee
+		dataCategory: City
+		summarizeBy: none
+		sourceColumn: Destination
+
+		annotation SummarizationSetBy = Automatic
+
+	column Route
+		dataType: string
+		lineageTag: fc020be0-d774-41cd-8915-2a1118bfba89
+		summarizeBy: none
+		sourceColumn: Route
+
+		annotation SummarizationSetBy = Automatic
+
+	column Dep_Time
+		dataType: dateTime
+		formatString: Long Time
+		lineageTag: e8ad10ff-e3c7-49fb-a0b0-f6db6794b60d
+		summarizeBy: none
+		sourceColumn: Dep_Time
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Time
+
+	column Arrival_Time
+		dataType: string
+		lineageTag: f0cf6fbe-5c7f-4431-ac5d-0c411d2013cd
+		summarizeBy: none
+		sourceColumn: Arrival_Time
+
+		annotation SummarizationSetBy = Automatic
+
+	column Duration
+		dataType: int64
+		formatString: 0
+		lineageTag: 8ace890c-45c3-470c-ba7e-59b8e226db0b
+		summarizeBy: sum
+		sourceColumn: Duration
+
+		annotation SummarizationSetBy = Automatic
+
+	column Total_Stops
+		dataType: int64
+		formatString: 0
+		lineageTag: f1014c5f-0a1e-4374-be62-884f6d5b324e
+		summarizeBy: sum
+		sourceColumn: Total_Stops
+
+		annotation SummarizationSetBy = Automatic
+
+	column Price
+		dataType: int64
+		formatString: 0
+		lineageTag: 04ae3bd9-2f57-4edb-91a3-e40d4b4525d1
+		summarizeBy: sum
+		sourceColumn: Price
+
+		annotation SummarizationSetBy = Automatic
+
+	partition IndigoFlightData = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("D:\PowerBI\Second\IndigoFlightData.xlsx"), null, true),
+				    IndigoFlightData_Sheet = Source{[Item="IndigoFlightData",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(IndigoFlightData_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Airline", type text}, {"Date_of_Journey", type date}, {"Source", type text}, {"Destination", type text}, {"Route", type text}, {"Dep_Time", type time}, {"Arrival_Time", type text}, {"Duration", Int64.Type}, {"Total_Stops", Int64.Type}, {"Price", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,4 @@
+relationship 4d82995c-a78a-4e7c-b400-60ed0656f95c
+	fromColumn: IndigoFlightData.Date_of_Journey
+	toColumn: Calendar.Date
+

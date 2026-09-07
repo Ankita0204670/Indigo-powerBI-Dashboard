@@ -1,0 +1,114 @@
+table Calendar
+	lineageTag: 2954dafc-02bd-4b53-ac24-c90b7a41b460
+	dataCategory: Time
+
+	column Date
+		isKey
+		formatString: General Date
+		lineageTag: bb256a90-d4d7-4a31-80cb-4e0c79f0b3d7
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		formatString: 0
+		lineageTag: bda9cb2c-ccde-421f-8aab-d23622f4923a
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Year]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Number'
+		formatString: 0
+		lineageTag: 31044263-79d0-46e6-86a4-2403e32b64f7
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Month Number]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month
+		lineageTag: d9c6ba86-a4d8-4228-863d-718457616be1
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month]
+		sortByColumn: 'Month Number'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Year'
+		lineageTag: ea2b0afe-52d8-452c-8a78-a157bd420a44
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Year]
+		sortByColumn: 'Month Year Sort'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter
+		lineageTag: 7f5fc851-e799-419d-bfe4-a690888d61b6
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Quarter]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Day
+		formatString: 0
+		lineageTag: c93bf233-5cb5-4821-a7fa-41b7607b5db4
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Day]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Day Name'
+		lineageTag: b70fd323-7b18-40b6-8df0-2f5e4f101b6c
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Day Name]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Day Number'
+		formatString: 0
+		lineageTag: eca429d6-ca2c-45f6-a281-b95c6a8c8d02
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Day Number]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Year Sort' =
+			
+			YEAR([Date]) * 100 + MONTH([Date])
+		formatString: 0
+		lineageTag: b045dc6c-427b-420b-8f42-455feca986b9
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Calendar = calculated
+		mode: import
+		source =
+				
+				ADDCOLUMNS(
+				    CALENDAR(
+				        MIN('IndigoFlightData'[Date_of_Journey]),
+				        MAX('IndigoFlightData'[Date_of_Journey])
+				    ),
+				    "Year", YEAR([Date]),
+				    "Month Number", MONTH([Date]),
+				    "Month", FORMAT([Date], "MMM"),
+				    "Month Year", FORMAT([Date], "MMM YYYY"),
+				    "Quarter", "Q" & FORMAT([Date], "Q"),
+				    "Day", DAY([Date]),
+				    "Day Name", FORMAT([Date], "DDD"),
+				    "Day Number", WEEKDAY([Date], 2)
+				)
+
+	annotation PBI_Id = 4d7b9cafc56c44179e823cbd835b5086
+

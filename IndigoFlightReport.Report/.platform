@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "IndigoFlightReport"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "6eb7e13d-67ea-4d41-98cb-b838a8dfbcb1"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "IndigoFlightReport"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "56ceed45-6af5-466e-8af0-f90c0e9c49f7"
+  }
+}
