@@ -1,4 +1,4 @@
-# IndiGo Flight Operations & Fare Analytics Dashboard
+# IndiGo Flight Operations & Revenue Analytics Dashboard
 
 ## Overview
 
